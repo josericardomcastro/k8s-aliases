@@ -80,4 +80,4 @@ You will see a prompt like this:
 
 ![Custom Prompt PS1](./img/prompt-ps1.png "Custom Prompt PS1")
 
-Format: [current time] [k8s context : k8s namespace] ~current location (git branch name)
+Format: [current time] [k8s context/cluster : k8s namespace] ~current location (git branch name)
