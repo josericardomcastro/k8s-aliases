@@ -1,0 +1,36 @@
+##############################
+## Prompt ps1 k8s + git
+##############################
+function k8s_git_ps1_prompt {
+
+    local __time="\[\033[32m\][\D{%H:%M}] "
+    local __cur_location="\[\033[00m\]\w "
+    
+    local __git_branch_color="\[\033[1;32m\]"
+    local __git_branch='`git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\/`'
+
+    local __k8s_ns='`kubectl config view --minify --output jsonpath={..namespace} 2> /dev/null`'
+    local __k8s_context=`kubectl config view --minify --output jsonpath={.current-context} 2> /dev/null`
+    
+    if [[ $__k8s_context == *"ocp"* ]]; then   
+        local __k8s_context="ocp"
+    fi 
+
+    if [[ $__k8s_context == *"/openshift"* ]]; then   
+        local __k8s_context="okd"
+    fi 
+
+    local __k8s_info="\[\033[1;36m\][$__k8s_context:$__k8s_ns] "
+    local __symbol_arrow="\[\033[1;32m\]└─ $ "
+    local __last_color="\[\033[00m\]"
+
+    
+    PS1="$__time"
+    PS1+="$__k8s_info"
+    PS1+="$__cur_location"
+    PS1+="$__git_branch_color$__git_branch\n"
+    PS1+="$__symbol_arrow"
+    PS1+="$__last_color"
+    export PS1
+}; k8s_git_ps1_prompt
+
