@@ -15,7 +15,7 @@ Name    | Description
 
 ### Kubernetes commands aliases
 
-To use my kubernetes commands aliases in your daily work with kubernetes, you have to copy the contents of file `k8s-commands-aliases` into your `.bashrc` file.
+To use my kubernetes commands aliases in your daily work with kubernetes, you have to copy the content of file `k8s-commands-aliases` into your `.bashrc` file.
 
 ```
 $ git clone https://github.com/josericardomcastro/k8s-aliases
@@ -69,7 +69,7 @@ See the [k8s-commands-aliases](./k8s-commands-aliases) file to the full list of 
 
 Custom $PS1 (Prompt Statement One) with information about kubernetes and git.
 
-The same way you did for the kubernetes aliases, you have to copy the contents of file `k8s-git-ps1` into your `.bashrc` file.
+The same way you did for the kubernetes aliases, you have to copy the content of file `k8s-git-ps1` into your `.bashrc` file.
 
 ```
 $ cat k8s-git-ps1 >> ~/.bashrc
