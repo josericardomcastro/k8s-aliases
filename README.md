@@ -31,7 +31,7 @@ Tools:
 - `kx` - kubectx
 - `kns` - kubens
 
-Commands:
+Commands verbs:
 - `g` - get
 - `e` - edit
 - `d` - delete
@@ -49,6 +49,8 @@ Resources:
 - `r` - routes
 - `pvc` - persistentvolumeclaims
 - `pv` - persistentvolume
+- `ep` - endpoints
+- `e`  - events
 
 #### Command usage example:
 
@@ -69,12 +71,17 @@ See the [k8s-commands-aliases](./k8s-commands-aliases) file to the full list of 
 
 Custom $PS1 (Prompt Statement One) with information about kubernetes and git.
 
-The same way you did for the kubernetes aliases, you have to copy the content of file `k8s-git-ps1` into your `.bashrc` file.
+Download the `k8s-git-ps1` file
+```
+curl -LO https://raw.githubusercontent.com/josericardomcastro/k8s-aliases/main/k8s-git-ps1
+```
+
+Add the following command to your `.bashrc` file:
 
 ```
-$ cat k8s-git-ps1 >> ~/.bashrc
-$ source ~/.bashrc
+[ -f <path-to-file>/k8s-git-ps1 ] && source <path-to-file>/k8s-git-ps1
 ```
+
 
 You will see a prompt like this:
 

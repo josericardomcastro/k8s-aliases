@@ -28,34 +28,40 @@ alias kgi='kubectl get ingress'
 alias kgr='kubectl get routes'
 alias kgpvc='kubectl get persistentvolumeclaims'
 alias kgpv='kubectl get persistentvolume'
+alias kgep='kubectl get endpoints'
+alias kgev='kubectl get events'
 
 # edit
 alias ke='kubectl edit'
 alias ken='kubectl edit nodes'
-alias kens='kubectl get namespaces'
-alias kep='kubectl get pods'
-alias kedp='kubectl get deployments.apps'
-alias kgds='kubectl get daemonsets.apps'
-alias kers='kubectl get replicasets.apps'
-alias kes='kubectl get services'
-alias kei='kubectl get ingress'
-alias ker='kubectl get routes'
-alias kepvc='kubectl get persistentvolumeclaims'
-alias kepv='kubectl get persistentvolume'
+alias kens='kubectl edit namespaces'
+alias kep='kubectl edit pods'
+alias kedp='kubectl edit deployments.apps'
+alias kgds='kubectl edit daemonsets.apps'
+alias kers='kubectl edit replicasets.apps'
+alias kes='kubectl edit services'
+alias kei='kubectl edit ingress'
+alias ker='kubectl edit routes'
+alias kepvc='kubectl edit persistentvolumeclaims'
+alias kepv='kubectl edit persistentvolume'
+alias keep='kubectl edit endpoints'
+alias keev='kubectl edit events'
 
 # delete
 alias kd='kubectl delete'
-alias kdn='kubectl get nodes'
-alias kdns='kubectl get namespaces'
-alias kdp='kubectl get pods'
-alias kddp='kubectl get deployments.apps'
-alias kdds='kubectl get daemonsets.apps'
-alias kdrs='kubectl get replicasets.apps'
-alias kds='kubectl get services'
-alias kdi='kubectl get ingress'
-alias kdr='kubectl get routes'
-alias kdpvc='kubectl get persistentvolumeclaims'
-alias kdpv='kubectl get persistentvolume'
+alias kdn='kubectl delete nodes'
+alias kdns='kubectl delete namespaces'
+alias kdp='kubectl delete pods'
+alias kddp='kubectl delete deployments.apps'
+alias kdds='kubectl delete daemonsets.apps'
+alias kdrs='kubectl delete replicasets.apps'
+alias kds='kubectl delete services'
+alias kdi='kubectl delete ingress'
+alias kdr='kubectl delete routes'
+alias kdpvc='kubectl delete persistentvolumeclaims'
+alias kdpv='kubectl delete persistentvolume'
+alias kdep='kubectl delete endpoints'
+alias kdev='kubectl delete events'
 
 # describe
 alias kdesc='kubectl describe'
@@ -70,6 +76,8 @@ alias kdesci='kubectl describe ingress'
 alias kdescr='kubectl describe routes'
 alias kdescpvc='kubectl describe persistentvolumeclaims'
 alias kdescpv='kubectl describe persistentvolume'
+alias kdescep='kubectl describe endpoints'
+alias kdescev='kubectl describe events'
 
 # force delete
 alias kdd='kubectl delete --force --grace-period=0'
@@ -83,6 +91,12 @@ alias kex='kubectl exec -it'
 alias kdrain='kubectl drain --ignore-daemonsets --delete-local-data --force --grace-period=0'
 alias kcon='kubectl cordon'
 alias kun='kubectl uncordon'
+
+##############################
+## client dry-run strategy - print the object that would be created
+##############################
+
+export do="--dry-run=client -o yaml"
 
 ##############################
 ## Autocomplete kubectl alias
