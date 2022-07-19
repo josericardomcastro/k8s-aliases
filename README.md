@@ -44,13 +44,18 @@ Resources:
 - `dp` - deployments
 - `ds` - daemonsets
 - `rs` - replicasets
+- `ss` - statefulsets
 - `s` - services
 - `i` - ingress
 - `r` - routes
+- `sc` - secrets
+- `cm` - configmaps
 - `pvc` - persistentvolumeclaims
 - `pv` - persistentvolume
 - `ep` - endpoints
 - `e`  - events
+- `rq` - resourcequotas
+- `lr` - limitranges
 
 #### Command usage example:
 
