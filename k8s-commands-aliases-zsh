@@ -1,7 +1,10 @@
+autoload -Uz compinit
+compinit
+
 ##############################
 ## kubectl autocomplete
 ##############################
-source <(kubectl completion bash)
+if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
 ##############################
 ## kubectl alias
@@ -17,24 +20,57 @@ alias kgall='kubectl get all'
 alias kgn='kubectl get nodes'
 alias kgnl='kubectl get nodes --show-labels'
 alias kgnw='kubectl get nodes -o wide'
+alias kgny='kubectl get nodes -o yaml'
 alias kgns='kubectl get namespaces'
+alias kgnsy='kubectl get namespaces -o yaml'
 alias kgp='kubectl get pods'
 alias kgpw='kubectl get pods -o wide'
+alias kgpy='kubectl get pods -o yaml'
 alias kgdp='kubectl get deployments.apps'
+alias kgdpw='kubectl get deployments.apps -o wide'
+alias kgdpy='kubectl get deployments.apps -o yaml'
 alias kgds='kubectl get daemonsets.apps'
+alias kgdsw='kubectl get daemonsets.apps -o wide'
+alias kgdsy='kubectl get daemonsets.apps -o yaml'
 alias kgrs='kubectl get replicasets.apps'
+alias kgrsw='kubectl get replicasets.apps -o wide'
+alias kgrsy='kubectl get replicasets.apps -o yaml'
 alias kgss='kubectl get statefulsets.apps'
+alias kgssw='kubectl get statefulsets.apps -o wide'
+alias kgssy='kubectl get statefulsets.apps -o yaml'
 alias kgs='kubectl get services'
+alias kgsw='kubectl get services -o wide'
+alias kgsy='kubectl get services -o yaml'
 alias kgi='kubectl get ingress'
+alias kgiw='kubectl get ingress -o wide'
+alias kgiy='kubectl get ingress -o yaml'
 alias kgr='kubectl get routes'
+alias kgrw='kubectl get routes -o wide'
+alias kgry='kubectl get routes -o yaml'
 alias kgsc='kubectl get secrets'
+alias kgscw='kubectl get secrets -o wide'
+alias kgscy='kubectl get secrets -o yaml'
 alias kgcm='kubectl get configmaps'
+alias kgcmw='kubectl get configmaps -o wide'
+alias kgcmy='kubectl get configmaps -o yaml'
 alias kgpvc='kubectl get persistentvolumeclaims'
+alias kgpvcw='kubectl get persistentvolumeclaims -o wide'
+alias kgpvcy='kubectl get persistentvolumeclaims -o yaml'
 alias kgpv='kubectl get persistentvolume'
+alias kgpvw='kubectl get persistentvolume -o wide'
+alias kgpvy='kubectl get persistentvolume -o yaml'
 alias kgep='kubectl get endpoints'
+alias kgepw='kubectl get endpoints -o wide'
+alias kgepy='kubectl get endpoints -o yaml'
 alias kgev='kubectl get events'
+alias kgevw='kubectl get events -o wide'
+alias kgevy='kubectl get events -o yaml'
 alias kgrq='kubectl get resourcequotas'
+alias kgrqw='kubectl get resourcequotas -o wide'
+alias kgrqy='kubectl get resourcequotas -o yaml'
 alias kglr='kubectl get limitranges'
+alias kglrw='kubectl get limitranges -o wide'
+alias kglry='kubectl get limitranges -o yaml'
 
 # edit
 alias ke='kubectl edit'
@@ -117,66 +153,3 @@ alias kun='kubectl uncordon'
 ##############################
 
 export do="--dry-run=client -o yaml"
-
-##############################
-## Autocomplete kubectl alias
-##############################
-function autocomplete_alias {
-    local namespace="autocomplete_alias"
-    # parse function based completion definitions, where capture group 2 => function and 3 => trigger
-    local compl_regex='complete( +[^ ]+)* -F ([^ ]+) ("[^"]+"|[^ ]+)'
-    # parse alias definitions, where capture group 1 => trigger, 2 => command, 3 => command arguments
-    local alias_regex="alias ([^=]+)='(\"[^\"]+\"|[^ ]+)(( +[^ ]+)*)'"
-    # create array of function completion triggers, keeping multi-word triggers together
-    eval "local completions=($(complete -p | sed -Ene "/$compl_regex/s//'\3'/p"))"
-    (( ${#completions[@]} == 0 )) && return 0
-    # create temporary file for wrapper functions and completions
-    rm -f "/tmp/${namespace}-*.tmp" # preliminary cleanup
-    local tmp_file; tmp_file="$(mktemp "/tmp/${namespace}-${RANDOM}XXX.tmp")" || return 1
-    local completion_loader; completion_loader="$(complete -p -D 2>/dev/null | sed -Ene 's/.* -F ([^ ]*).*/\1/p')"
-    # read in "<alias> '<aliased command>' '<command args>'" lines from defined aliases
-    local line; while read line; do
-        eval "local alias_tokens; alias_tokens=($line)" 2>/dev/null || continue # some alias arg patterns cause an eval parse error
-        local alias_name="${alias_tokens[0]}" alias_cmd="${alias_tokens[1]}" alias_args="${alias_tokens[2]# }"
-        # skip aliases to pipes, boolean control structures and other command lists
-        # (leveraging that eval errs out if $alias_args contains unquoted shell metacharacters)
-        eval "local alias_arg_words; alias_arg_words=($alias_args)" 2>/dev/null || continue
-        # avoid expanding wildcards
-        read -a alias_arg_words <<< "$alias_args"
-        # skip alias if there is no completion function triggered by the aliased command
-        if [[ ! " ${completions[*]} " =~ " $alias_cmd " ]]; then
-            if [[ -n "$completion_loader" ]]; then
-                # force loading of completions for the aliased command
-                eval "$completion_loader $alias_cmd"
-                # 124 means completion loader was successful
-                [[ $? -eq 124 ]] || continue
-                completions+=($alias_cmd)
-            else
-                continue
-            fi
-        fi
-        local new_completion="$(complete -p "$alias_cmd")"
-        # create a wrapper inserting the alias arguments if any
-        if [[ -n $alias_args ]]; then
-            local compl_func="${new_completion/#* -F /}"; compl_func="${compl_func%% *}"
-            # avoid recursive call loops by ignoring our own functions
-            if [[ "${compl_func#_$namespace::}" == $compl_func ]]; then
-                local compl_wrapper="_${namespace}::${alias_name}"
-                    echo "function $compl_wrapper {
-                        (( COMP_CWORD += ${#alias_arg_words[@]} ))
-                        COMP_WORDS=($alias_cmd $alias_args \${COMP_WORDS[@]:1})
-                        (( COMP_POINT -= \${#COMP_LINE} ))
-                        COMP_LINE=\${COMP_LINE/$alias_name/$alias_cmd $alias_args}
-                        (( COMP_POINT += \${#COMP_LINE} ))
-                        $compl_func
-                    }" >> "$tmp_file"
-                    new_completion="${new_completion/ -F $compl_func / -F $compl_wrapper }"
-            fi
-        fi
-        # replace completion trigger by alias
-        new_completion="${new_completion% *} $alias_name"
-        echo "$new_completion" >> "$tmp_file"
-    done < <(alias -p | sed -Ene "s/$alias_regex/\1 '\2' '\3'/p")
-    source "$tmp_file" && rm -f "$tmp_file"
-}; autocomplete_alias
-

@@ -15,14 +15,25 @@ Name    | Description
 
 ### Kubernetes commands aliases
 
-To use my kubernetes commands aliases in your daily work with kubernetes, you have to copy the content of file `k8s-commands-aliases` into your `.bashrc` file.
+
+To use my kubernetes commands aliases in your daily work with kubernetes, you have to copy the content of file `k8s-commands-aliases-bash`|`k8s-commands-aliases-zsh` into your terminal configuration file.
+
+#### Bash terminal
 
 ```
-$ git clone https://github.com/josericardomcastro/k8s-aliases
-$ cd k8s-aliases
-$ cat k8s-commands-aliases >> ~/.bashrc
-$ source ~/.bashrc
+git clone https://github.com/josericardomcastro/k8s-aliases
+cat k8s-aliases/k8s-commands-aliases-bash >> ~/.bashrc
+source ~/.bashrc
 ```
+
+#### Zsh terminal
+
+```
+git clone https://github.com/josericardomcastro/k8s-aliases
+cat k8s-aliases/k8s-commands-aliases-zsh >> ~/.zshrc
+source ~/.zshrc
+```
+
 
 #### The logic behind the aliases
 
@@ -57,7 +68,11 @@ Resources:
 - `rq` - resourcequotas
 - `lr` - limitranges
 
-#### Command usage example:
+Output
+- `w` - wide
+- `y` - yaml
+
+#### Command usage examples:
 
 Alias | Command description
 ------ | ------------------- 
@@ -65,11 +80,13 @@ kx minikube | Switch to the minikube cluster
 kns app-prod | Switch to app-prod namespace
 kgp | kubectl get pods
 kgpw | kubectl get pods -o wide
+kgpy my-pod | kubectl get pods my-pod -o yaml
 kgs | kubectl get services
+kgsy my-service | kubectl get services my-service -o yaml
 kedp app-frontend | kubectl edit deployments app-frontend
 kdns ns-test | kubectl delete namespaces ns-test
 
-See the [k8s-commands-aliases](./k8s-commands-aliases) file to the full list of aliases.
+See the [k8s-commands-aliases-bash](./k8s-commands-aliases-bash) or [k8s-commands-aliases-zsh](./k8s-commands-aliases-zsh) file for the full list of aliases.
 
 
 ### Custom PS1 Prompt for bash
